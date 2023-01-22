@@ -6,13 +6,11 @@ const router = require("./routes/user")
 const cors = require('cors')
 
 const app = express()
-const port = 8005
+const port = process.env.EXPRESS_PORT
 
 app.use(cors())
 app.use(bodyParser.json());
 app.use('/api', router)
-
-
 
 async function start() {
     try {
