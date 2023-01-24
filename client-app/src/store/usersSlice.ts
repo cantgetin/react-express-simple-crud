@@ -6,12 +6,14 @@ import {RootState} from "./store";
 interface UsersState {
     users: User[]
     filteredUsers: User[]
+    selectedUser: User
     loading: LoadingState
 }
 
 const initialState = {
     users: [],
     filteredUsers: [],
+    selectedUser: {firstName: '', lastName: '', age: 0, id: 0},
     loading: LoadingState.Idle,
 } as UsersState
 
@@ -36,6 +38,12 @@ const usersSlice = createSlice({
                     user.lastName.toLowerCase().includes(action.payload.toLowerCase()))
             };
         },
+        setSelectedUser: (state, action: PayloadAction<User>) => {
+            return {
+                ...state,
+                selectedUser: action.payload
+            };
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(fetchUsers.fulfilled, (state, action) => {
@@ -53,9 +61,11 @@ const usersSlice = createSlice({
 
 export const {
     searchByName,
+    setSelectedUser
 } = usersSlice.actions
 
 export const selectUsers = (state: RootState) => state.users.users
 export const selectUsersLoading = (state: RootState) => state.users.loading
+export const selectUsersSelectedUser = (state: RootState) => state.users.selectedUser
 
 export default usersSlice.reducer
