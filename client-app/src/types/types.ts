@@ -4,3 +4,10 @@ export interface User {
     lastName: string,
     age: number
 }
+
+export enum LoadingState {
+    Idle,
+    Pending,
+    Succeeded,
+    Failed
+}

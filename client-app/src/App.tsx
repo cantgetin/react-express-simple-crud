@@ -1,25 +1,33 @@
 import {useEffect, useState} from 'react'
 import axios from 'axios'
 import Modal from "./components/UI/Modal/Modal";
-import {Formik, Form, Field, ErrorMessage} from 'formik';
+import {ErrorMessage, Field, Form, Formik} from 'formik';
 import Button from "./components/UI/Button";
-import {User} from "./types/types"
+import {LoadingState, User} from "./types/types"
+import {useAppDispatch, useAppSelector} from "./store/hooks";
+import {fetchUsers, selectUsers, selectUsersLoading} from "./store/usersSlice";
 
 function App() {
 
-    const [users, setUsers] = useState<User[]>([]);
+    const users = useAppSelector<User[]>(selectUsers);
+    const loaded = useAppSelector<LoadingState>(selectUsersLoading)
+    const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        if (users.length === 0) dispatch(fetchUsers())
+    }, [dispatch])
+
     const [selectedUser, setSelectedUser] = useState<User | undefined>(undefined)
-    const fetchUsers = () => axios.get('http://localhost:8005/api/read').then(r => setUsers(r.data));
 
     const [createModalActive, setCreateModalActive] = useState<boolean>(false)
     const [deleteModalActive, setDeleteModalActive] = useState<boolean>(false)
     const [updateModalActive, setUpdateModalActive] = useState<boolean>(false)
 
     useEffect(() => {
-        void fetchUsers()
+        dispatch(fetchUsers())
     }, [])
     const userListUpdated = () => {
-        void fetchUsers()
+        dispatch(fetchUsers())
         setUpdateModalActive(false)
         setDeleteModalActive(false)
         setCreateModalActive(false)
@@ -36,7 +44,7 @@ function App() {
             </div>
             <div className="h-full bg-blue-50">
                 {
-                    users ?
+                    loaded == LoadingState.Succeeded ?
                         <div className="flex p-10 gap-5 flex-wrap">
                             {users.map(u =>
                                 <div className="h-64 w-64 rounded-md shadow-md bg-blue-200 overflow-hidden" key={u.id}>
