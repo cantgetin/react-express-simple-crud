@@ -23,24 +23,23 @@ export const fetchUsers = createAsyncThunk(
     'users/fetchUsers',
     async () => {
         const response = await axios.get<User[]>(`${API_URL}/read`)
-        console.log(response.data)
         return response.data
     }
 )
 
 export const createUser = createAsyncThunk(
-    'users/fetchUsers',
+    'users/createUser',
     async (user: Omit<User, "id">) => axios.post(`${API_URL}/create`, {...user}).then((res) => res)
 )
 
 export const updateUser = createAsyncThunk(
-    'users/fetchUsers',
-    async  (user: User) => axios.post(`${API_URL}/update/${user!.id}`, {...user}).then((res) => res)
+    'users/updateUser',
+    async  (user: User) => axios.post(`${API_URL}/update/${user.id}`, {...user}).then((res) => res)
 )
 
 export const deleteUser = createAsyncThunk(
-    'users/fetchUsers',
-    async(user: User) => axios.get(`${API_URL}/delete/${user!.id}`).then((res) => res)
+    'users/deleteUser',
+    async(userId: number) => axios.get(`${API_URL}/delete/${userId}`).then((res) => res)
 )
 
 const usersSlice = createSlice({

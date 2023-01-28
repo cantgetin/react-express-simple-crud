@@ -4,7 +4,8 @@ import {ErrorMessage, Field, Form, Formik} from "formik";
 import axios from "axios";
 import {useAppDispatch, useAppSelector} from "../../../store/hooks";
 import {User} from "../../../types/types";
-import {fetchUsers, selectUsersSelectedUser} from "../../../store/usersSlice";
+import {fetchUsers, selectUsersSelectedUser, updateUser} from "../../../store/usersSlice";
+import Button from "../Button";
 
 type Props = {
     active: boolean,
@@ -21,9 +22,8 @@ const UpdateUserModal = ({active, setActive} : Props) => {
 
     return (
         <Modal active={active} setActive={setActive}>
-            <div className="flex flex-col gap-5">
-                Update {selectedUser?.firstName} {selectedUser?.lastName}?
-
+            <div className="flex flex-col gap-2">
+                <div className="text-lg font-semibold">Updating user {selectedUser?.firstName} {selectedUser?.lastName}</div>
                 <Formik
                     initialValues={selectedUser!}
                     enableReinitialize={true}
@@ -34,28 +34,24 @@ const UpdateUserModal = ({active, setActive} : Props) => {
                     //     return errors;
                     // }}
                     onSubmit={(values, {setSubmitting}) => {
-                        axios.post(`http://localhost:8005/api/update/${selectedUser!.id}`, {...values}).then(r => {
-                            r.status == 200
-                                ? userListUpdated()
-                                : null
-                        })
+                        dispatch(updateUser(values)).then(() => userListUpdated())
                     }}
                 >
                     {({isSubmitting}) => (
                         <Form>
                             <h1>Name:</h1>
-                            <Field type="text" name="firstName" className="border border-blue-500 p-2"/>
+                            <Field type="text" name="firstName" className="border border-blue-500 p-2 w-full"/>
                             <ErrorMessage name="email" component="div"/>
                             <h1>Surname:</h1>
-                            <Field type="text" name="lastName" className="border border-blue-500 p-2"/>
+                            <Field type="text" name="lastName" className="border border-blue-500 p-2 w-full"/>
                             <ErrorMessage name="password" component="div"/>
 
                             <h1>Age:</h1>
-                            <Field type="number" name="age" className="border border-blue-500 p-2"/>
+                            <Field type="number" name="age" className="border border-blue-500 p-2 w-full"/>
                             <ErrorMessage name="password" component="div"/>
-                            <button type="submit" disabled={isSubmitting} className="block bg-blue-200">
+                            <Button className="mt-5" type="submit" disabled={isSubmitting}>
                                 Submit
-                            </button>
+                            </Button>
                         </Form>
                     )}
                 </Formik>
