@@ -2,7 +2,7 @@ require('dotenv').config({path: '.env'});
 const express = require('express')
 const bodyParser = require("body-parser");
 const sequelize = require("./db")
-const router = require("./routes/user")
+const userRoute = require("./routes/user")
 const cors = require('cors')
 
 const app = express()
@@ -10,7 +10,8 @@ const port = process.env.EXPRESS_PORT
 
 app.use(cors())
 app.use(bodyParser.json());
-app.use('/api', router)
+
+app.use('/user', userRoute)
 
 async function start() {
     try {

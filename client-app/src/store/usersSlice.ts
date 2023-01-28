@@ -1,7 +1,9 @@
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit'
-import axios from "axios";
+import axios, {Axios, AxiosResponse} from "axios";
 import {LoadingState, User} from "../types/types";
 import {RootState} from "./store";
+
+const API_URL = "http://localhost:8005/user"
 
 interface UsersState {
     users: User[]
@@ -20,10 +22,25 @@ const initialState = {
 export const fetchUsers = createAsyncThunk(
     'users/fetchUsers',
     async () => {
-        const response = await axios.get<User[]>('http://localhost:8005/api/read')
+        const response = await axios.get<User[]>(`${API_URL}/read`)
         console.log(response.data)
         return response.data
     }
+)
+
+export const createUser = createAsyncThunk(
+    'users/fetchUsers',
+    async (user: Omit<User, "id">) => axios.post(`${API_URL}/create`, {...user}).then((res) => res)
+)
+
+export const updateUser = createAsyncThunk(
+    'users/fetchUsers',
+    async  (user: User) => axios.post(`${API_URL}/update/${user!.id}`, {...user}).then((res) => res)
+)
+
+export const deleteUser = createAsyncThunk(
+    'users/fetchUsers',
+    async(user: User) => axios.get(`${API_URL}/delete/${user!.id}`).then((res) => res)
 )
 
 const usersSlice = createSlice({
