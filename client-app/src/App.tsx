@@ -47,7 +47,7 @@ function App() {
                                     <div className="h-1/4 bg-blue-300 text-center" onMouseEnter={() => dispatch(setSelectedUser(u))}>
                                         <div>{u.firstName} {u.lastName} age: {u.age}</div>
                                             <Button className="mr-2" onClick={() => setUpdateModalActive(true)}>Update</Button>
-                                            <Button className="bg-gray-700" onClick={() => setDeleteModalActive(true)}>Delete</Button>
+                                            <Button className="ml-2" onClick={() => setDeleteModalActive(true)}>Delete</Button>
                                     </div>
                                 </div>
                             )}

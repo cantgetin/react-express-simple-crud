@@ -1,7 +1,6 @@
 import React from 'react';
 import Modal from "./Modal";
 import {ErrorMessage, Field, Form, Formik} from "formik";
-import axios from "axios";
 import {useAppDispatch, useAppSelector} from "../../../store/hooks";
 import {User} from "../../../types/types";
 import {createUser, fetchUsers, selectUsersSelectedUser, updateUser} from "../../../store/usersSlice";
@@ -30,12 +29,13 @@ const CreateUserModal = ({active, setActive}: Props) => {
                 <div className="text-lg font-semibold">Creating new user</div>
                 <Formik
                     initialValues={ModalUser}
-                    // validate={values => {
-                    //     const errors = {age: ''};
-                    //     if (!values.name) errors.email = 'Required';
-                    //     if (!value.surname) errors.surname = 'Required';
-                    //     return errors;
-                    // }}
+                    validate={values => {
+                        const errors = {age: '', firstName: '', lastName: ''};
+                        if (!values.firstName) errors.firstName = 'First name is required.';
+                        if (!values.lastName) errors.lastName = 'Last name is required.';
+                        if (!values.age || values.age < 0 || values.age > 150) errors.age = 'Age can\'t be less than zero and more than 150.';
+                        return errors;
+                    }}
                     onSubmit={(values, {setSubmitting, resetForm}) => {
                         dispatch(createUser(values)).then(() => userListUpdated())
                         resetForm()
@@ -45,15 +45,15 @@ const CreateUserModal = ({active, setActive}: Props) => {
                     {({isSubmitting}) => (
                         <Form>
                             <h1>Name:</h1>
-                            <Field type="text" name="firstName" className="border border-blue-500 p-2 w-full"/>
-                            <ErrorMessage name="email" component="div"/>
+                            <Field type="text" name="firstName" className="bg-slate-200 border shadow-md shadow-inner p-2 my-1 rounded-md w-full"/>
+                            <ErrorMessage name="firstName" component="div" className="text-red-600 w-full"/>
                             <h1>Surname:</h1>
-                            <Field type="text" name="lastName" className="border border-blue-500 p-2 w-full"/>
-                            <ErrorMessage name="password" component="div"/>
+                            <Field type="text" name="lastName" className="bg-slate-200 border shadow-md shadow-inner p-2 my-1 rounded-md w-full"/>
+                            <ErrorMessage name="lastName" component="div" className="text-red-600 w-full"/>
 
                             <h1>Age:</h1>
-                            <Field type="number" name="age" className="border border-blue-500 p-2 w-full"/>
-                            <ErrorMessage name="password" component="div"/>
+                            <Field type="number" name="age" className="bg-slate-200 border shadow-md shadow-inner p-2 my-1 rounded-md w-full"/>
+                            <ErrorMessage name="age" component="div" className="text-red-600 w-full"/>
                             <Button className="mt-5" type="submit" disabled={isSubmitting}>
                                 Submit
                             </Button>
